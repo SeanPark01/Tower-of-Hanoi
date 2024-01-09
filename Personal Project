@@ -1,0 +1,61 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+public class TowerofHanoi01 {
+    static BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static int moveCounter = 0; // Counter for the number of moves
+
+    // Function to validate the input and prompt again until a valid positive integer is entered or 'X' to exit
+    static int validateInput() throws IOException {
+        while (true) {
+            String input = bf.readLine().trim();
+            if ("X".equalsIgnoreCase(input)) {
+                return -1; // Exit signal
+            }
+            try {
+                int n = Integer.parseInt(input);
+                if (n <= 0) {
+                    bw.write("Please enter a positive integer for the number of disks, or press X to exit.\n");
+                    bw.flush();
+                } else {
+                    return n;
+                }
+            } catch (NumberFormatException e) {
+                bw.write("Invalid input. Please enter a positive integer, or press X to exit.\n");
+                bw.flush();
+            }
+        }
+    }
+
+    // Recursive function to solve the Tower of Hanoi puzzle
+    static void towerOfHanoi(int n, char from_rod, char to_rod, char aux_rod) throws IOException {
+        if (n == 0) {
+            return;
+        }
+        towerOfHanoi(n - 1, from_rod, aux_rod, to_rod);
+        bw.write("Move disk " + n + " from rod " + from_rod + " to rod " + to_rod + "\n");
+        moveCounter++;
+        towerOfHanoi(n - 1, aux_rod, to_rod, from_rod);
+    }
+
+    public static void main(String args[]) throws IOException {
+        bw.write("Tower of Hanoi Solver\n");
+        bw.write("Enter the number of disks, or press X to exit: ");
+        bw.flush();
+
+        int N = validateInput(); // Validate the input before proceeding
+
+        if (N > 0) {
+            towerOfHanoi(N, 'A', 'C', 'B'); // A, B, and C are names of rods
+            bw.write("Total Moves: " + moveCounter + "\n");
+            bw.flush();
+        } else {
+            bw.write("Exiting due to invalid input or user request.\n");
+        }
+        bw.close();
+    }
+}
